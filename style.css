@@ -14,3 +14,19 @@ h1 {
 #result {
   margin-top: 50px;
 }
+
+/* Tampilan untuk perangkat mobile */
+@media only screen and (max-width: 600px) {
+  h1 {
+    font-size: 24px;
+    margin-top: 30px;
+  }
+
+  #imageUpload {
+    margin-top: 10px;
+  }
+
+  #result {
+    margin-top: 30px;
+  }
+}
