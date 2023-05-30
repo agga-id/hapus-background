@@ -10,6 +10,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
       const formData = new FormData();
       formData.append('image_file', file);
 
+      // Menampilkan pemberitahuan sedang diproses
+      const notification = document.getElementById('notification');
+      notification.innerHTML = 'Sabar ges proses dulu...';
+
       // Mengirim permintaan POST ke remove.bg API
       fetch('https://api.remove.bg/v1.0/removebg', {
         method: 'POST',
@@ -20,16 +24,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
       })
         .then(response => response.blob())
         .then(result => {
+          // Menghilangkan pemberitahuan
+          notification.innerHTML = '';
+
           // Membuat URL objek Blob
           const imgUrl = URL.createObjectURL(result);
 
           // Menampilkan hasil
           const resultContainer = document.getElementById('result');
           resultContainer.innerHTML = `<img src="${imgUrl}" alt="Hasil">`;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    }
-  }
-});
+
+          // Menambahkan tombol download
+          const downloadButton = document.createElement('button');
+          downloadButton.textContent
