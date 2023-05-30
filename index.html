@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Remove Background</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333333;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin-top: 50px;
+      font-size: 36px;
+      color: #333333;
+    }
+
+    #imageUpload {
+      margin-top: 20px;
+    }
+
+    #result {
+      margin-top: 50px;
+    }
+
+    #result img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #notification {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #666666;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    @media screen and (max-width: 600px) {
+      h1 {
+        font-size: 24px;
+        margin-top: 30px;
+      }
+
+      #imageUpload {
+        margin-top: 10px;
+      }
+
+      #result {
+        margin-top: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Remove Background</h1>
+  <input type="file" id="imageUpload" accept="image/*">
+  <div id="result"></div>
+  <div id="notification"></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+      const inputElement = document.getElementById('imageUpload');
+      inputElement.addEventListener('change', handleFiles, false);
+
+      function handleFiles() {
+        const file = this.files[0];
+
+        if (file) {
+          const formData = new FormData();
+          formData.append('image_file', file);
+
+          const notification = document.getElementById('notification');
+          notification.innerHTML = 'Sedang diproses...';
+
+          fetch('https://api.remove.bg/v1.0/removebg', {
+            method: 'POST',
+            headers: {
+              'X-Api-Key': 'sdvkgriWG6QGaWVignW7yKdT' // Ganti dengan API key Anda dari remove.bg
+            },
+            body: formData
+          })
+            .then(response => response.blob())
+            .then(result => {
+              notification.innerHTML = '';
+
+              const imgUrl = URL.createObjectURL(result);
+
+              const resultContainer = document.getElementById('result');
+              resultContainer.innerHTML = `<img src="${imgUrl}" alt="Hasil">`;
+
+              const downloadButton = document.createElement('button');
+              downloadButton.textContent = 'Download';
+              downloadButton.addEventListener('click', () => {
+                const a = document.createElement('a');
+                a.href = imgUrl;
+                a.download = 'hasil.png';
+                a.click();
+              });
+
+              resultContainer.appendChild(downloadButton);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              notification.innerHTML = 'Terjadi kesalahan. Silakan coba lagi.';
+            });
+        }
+      }
+    });
+  </script>
+</body>
+</html>
